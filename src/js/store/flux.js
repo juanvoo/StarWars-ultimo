@@ -1,45 +1,96 @@
-const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+const getState = ({
+    getStore,
+    getActions,
+    setStore
+}) => {
+    return {
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+        store: {
+            demo: [{
+                    title: "FIRST",
+                    background: "white",
+                    initial: "white",
+                },
+                {
+                    title: "SECOND",
+                    background: "white",
+                    initial: "white",
+                },
+            ],
 
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
-	};
+
+            characters: [],
+            planets: [],
+            vehicles: [],
+            favorites: [],
+
+
+
+        },
+        actions: {
+            exampleFunction: () => {
+                getActions().changeColor(0, "green");
+            },
+            loadCharacters: () => {
+                fetch("https://www.swapi.tech/api/people/")
+                    .then((response) => response.json())
+                    .then((data) => setStore({
+                        characters: data.results
+                    }));
+            },
+            loadPlanets: () => {
+                fetch("https://www.swapi.tech/api/planets/")
+                    .then((response) => response.json())
+                    .then((data) => setStore({
+                        planets: data.results
+                    }));
+            },
+            loadVehicles: () => {
+                fetch("https://www.swapi.tech/api/vehicles/")
+                    .then((response) => response.json())
+                    .then((data) => setStore({
+                        vehicles: data.results
+                    }));
+            },
+
+            addFavorites: (item) => {
+
+                const store = getStore();
+
+                setStore({
+                    favorites: [...store.favorites, item]
+                });
+
+            },
+
+            deleteFavorites: (index) => {
+
+                const store = getStore();
+
+                setStore({
+                    favorites: store.favorites.filter((favorites, i) => i !== index)
+                })
+
+
+            },
+
+            changeColor: (index, color) => {
+                //getstore
+                const store = getStore();
+
+
+                const demo = store.demo.map((elm, i) => {
+                    if (i === index) elm.background = color;
+                    return elm;
+                });
+
+                //reseteo
+                setStore({
+                    demo: demo
+                });
+            },
+        },
+    };
 };
 
 export default getState;
