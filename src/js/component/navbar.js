@@ -1,9 +1,20 @@
 import React, { useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
+  let history = useHistory();
+
+  const handleLogout = ()=>{
+		
+		let onLogged = actions.logout();
+
+		if(!onLogged){//true
+			history.push("/login");
+		}
+	}
 
   return (
     <nav className="navbar bg-light px-5 py-4">
@@ -15,6 +26,11 @@ export const Navbar = () => {
             className="d-inline-block align-text-top"
           />
         </Link>
+        <div className="ml-auto">
+				{/* <Link to="/demo"> */}
+					{store.auth ? (<button className="btn btn-primary" onClick={handleLogout}>Logout</button>):null}
+				{/* </Link> */}
+			</div>
         <div className="btn-group">
           {store.favorites.length != 0 ? (
             <button
