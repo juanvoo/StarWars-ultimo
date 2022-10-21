@@ -1,3 +1,4 @@
+import axios from 'axios';
 const getState = ({
     getStore,
     getActions,
@@ -23,6 +24,8 @@ const getState = ({
             planets: [],
             vehicles: [],
             favorites: [],
+            auth: false,
+            profile: {}
 
 
 
@@ -30,6 +33,47 @@ const getState = ({
         actions: {
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
+            },
+
+            userProfile: async () => {
+                const userToken = localStorage.getItem('token')
+                try {
+                    const response = await axios.get("https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/profile", {
+                        headers: {
+                            Authorization: "Bearer " + userToken,
+                        }
+                    })
+                    // console.log(data)
+                    setStore({
+                        profile: response.data.user
+                    })
+                    return true;
+
+                } catch (error) {
+                    console.log(error)
+                    if (error.code === "ERR_BAD_REQUEST") {
+                        console.log(error.response.data.msg)
+                    }
+                }
+            },
+            checkToken: async () => {
+                const userToken = localStorage.getItem('token')
+                try {
+                    const response = await axios.get("https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/valid-token", {
+
+                        headers: {
+                            Authorization: "Bearer " + userToken,
+                        }
+                    })
+                    // console.log(data)
+                    setStore({
+                        auth: response.data.status
+                    })
+                    return true;
+
+                } catch (error) {
+                    console.log(error)
+                }
             },
             loadCharacters: () => {
                 fetch("https://www.swapi.tech/api/people/")
@@ -83,7 +127,7 @@ const getState = ({
             },
             login: async (email, password) => {
                 try {
-                    const response = await fetch('https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/login', {
+                    const response = await axios.post('https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/login', {
                         method: 'POST',
                         body: JSON.stringify({
                             email: email,
@@ -118,7 +162,11 @@ const getState = ({
                             headers: {
                                 "Content-Type": "application/json"
                             },
+
+                            
                         }
+
+                        
                     ).then((resp) => {
                         if (resp.ok) {
                             console.log("registro OK");
