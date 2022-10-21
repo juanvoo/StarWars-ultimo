@@ -109,6 +109,23 @@ const getState = ({
                     console.log(error);
                     return false;
                 }
+
+                signup: async (infouserpassw) => {
+                    await fetch(
+                        "https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/signup", {
+                            method: "POST",
+                            body: JSON.stringify(infouserpassw),
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                        }
+                    ).then((resp) => {
+                        if (resp.ok) {
+                            console.log("registro OK");
+                        }
+                    });
+                }
+
             },
             changeColor: (index, color) => {
                 //getstore

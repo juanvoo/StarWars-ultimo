@@ -19,18 +19,20 @@ export const Navbar = () => {
   return (
     <nav className="navbar bg-light px-5 py-4">
       <div className="container-fluid">
-        <Link class="navbar-brand" to={"/"}>
+        <Link class="navbar-brand" to={"/login"}>
           <img
             src="https://img.icons8.com/ios/50/000000/star-wars.png"
             alt=""
             className="d-inline-block align-text-top"
           />
         </Link>
-        <div className="ml-auto">
-				{/* <Link to="/demo"> */}
-					{store.auth ? (<button className="btn btn-primary" onClick={handleLogout}>Logout</button>):null}
-				{/* </Link> */}
-			</div>
+        <Link to="/login">
+          <button className="btn btn-info">Login</button>{store.auth ? (<button className="btn btn-primary dropdown-toggle" onClick={handleLogout}>Logout</button>):null}
+        </Link>
+        <Link to="/signup">
+            <button className="btn btn-secondary">Register</button>{" "}
+          </Link>
+          <Link to="/login"><button type="button" class="btn btn-danger">Logout</button>{store.auth ? (<button className="btn btn-primary dropdown-toggle" onClick={handleLogout}>Logout</button>):null}</Link>
         <div className="btn-group">
           {store.favorites.length != 0 ? (
             <button
