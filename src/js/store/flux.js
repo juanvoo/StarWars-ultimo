@@ -56,6 +56,26 @@ const getState = ({
                     }
                 }
             },
+
+            validarToken: async () => {
+                const checkToken = localStorage.getItem("token")
+                try {
+                    const response = await axios.get('https://3000-juanvoo-starwarsrestapi-u3xboltijfy.ws-us72.gitpod.io/profile', {
+                        headers: {
+                            Authorization: "Bearer" + checkToken
+                        }
+                    })
+                    return true;
+                } catch (error) {
+                    console.log(error);
+                    if (error.code === 'ERR_BAD_REQUEST') {
+                        setStore({
+                            auth: false
+                        });
+                    }
+                    return false;
+                }
+            },
             checkToken: async () => {
                 const userToken = localStorage.getItem('token')
                 try {
@@ -163,10 +183,10 @@ const getState = ({
                                 "Content-Type": "application/json"
                             },
 
-                            
+
                         }
 
-                        
+
                     ).then((resp) => {
                         if (resp.ok) {
                             console.log("registro OK");
